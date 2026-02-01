@@ -1,10 +1,12 @@
-FROM nginx:alpine
+FROM tomcat:9.0-jdk11
 
-# Copy static files to nginx
-COPY . /usr/share/nginx/html/
+# Remove default webapps
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# Copy all frontend files to Tomcat webapps
+COPY . /usr/local/tomcat/webapps/ROOT/
 
 # Expose port
-EXPOSE 80
+EXPOSE 8080
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["catalina.sh", "run"]

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  database:
+    build: ./database
+    container_name: smarthire-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: smarthire
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - smarthire-network
+
+  backend:
+    build: ./backend
+    container_name: smarthire-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: smarthire
+      DB_USER: admin
+      DB_PASSWORD: admin123
+    networks:
+      - smarthire-network
+
+  frontend:
+    build: ./frontend
+    container_name: smarthire-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - smarthire-network
+
+volumes:
+  db-data:
+
+networks:
+  smarthire-network:
+    driver: bridge

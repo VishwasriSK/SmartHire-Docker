@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 public class DBConnection {
 
     private static final String URL =
-        "jdbc:mysql://localhost:3306/smarthire";
-    private static final String USER = "root";
-    private static final String PASSWORD = "sql123";  // ← Updated
+        "jdbc:mysql://database:3306/smarthire";
+    private static final String USER = "admin";
+    private static final String PASSWORD = "admin123";
 
     public static Connection getConnection() {
         try {

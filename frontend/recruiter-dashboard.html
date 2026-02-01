@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Recruiter Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .logout {
+            float: right;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .logout:hover {
+            background-color: #c82333;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        .section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        ul {
+            color: #555;
+            line-height: 1.8;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="logout" class="logout">Logout</a>
+        <h1>Welcome, Recruiter!</h1>
+        <p>Manage your job postings and applications from this dashboard.</p>
+        
+        <div class="actions">
+            <a href="add-job.html" class="btn btn-primary">📝 Post a New Job</a>
+            <a href="viewApplications" class="btn btn-primary">👥 View Applications</a>
+            <a href="viewMyJobs" class="btn btn-primary">📋 View My Jobs</a>
+        </div>
+        
+        <div class="section">
+            <p><strong>What you can do:</strong></p>
+            <ul>
+                <li>✅ Post new job openings</li>
+                <li>✅ View all your posted jobs</li>
+                <li>✅ Review candidate applications</li>
+                <li>✅ Shortlist or reject candidates</li>
+                <li>✅ Delete job listings</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+name: SmartHire CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Compile Java Servlets
+        run: |
+          mkdir -p frontend/WEB-INF/classes
+          docker run --rm \
+            -v ${{ github.workspace }}/backend:/src \
+            -v ${{ github.workspace }}/frontend/WEB-INF/classes:/out \
+            eclipse-temurin:11-jdk bash -c "
+              apt-get update -qq && apt-get install -y wget &&
+              wget -q -O /tmp/servlet-api.jar \
+              https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar &&
+              cd /src &&
+              find src/main/java -name '*.java' > sources.txt &&
+              javac -cp '/tmp/servlet-api.jar:lib/mysql-connector-j-9.6.0/*' \
+              -d /out @sources.txt
+            "
+
+      - name: Build and Push Database Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./database
+          push: true
+          tags: vishwasri/smarthire-database:latest
+
+      - name: Build and Push Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: vishwasri/smarthire-backend:latest
+
+      - name: Build and Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: vishwasri/smarthire-frontend:latest
+
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Start Application
+        run: docker compose up -d
+
+      - name: Wait for Services
+        run: sleep 30
+
+      - name: Verify Containers Running
+        run: docker ps
+
+      - name: Test Frontend
+        run: curl -f http://localhost:8080 || exit 1
+
+      - name: Test Database
+        run: |
+          docker exec smarthire-db mysql -uadmin -padmin123 \
+          smarthire -e "SHOW TABLES;"
+
+      - name: Stop Containers
+        run: docker compose down
